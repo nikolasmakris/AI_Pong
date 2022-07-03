@@ -27,16 +27,21 @@ class PaddleOP(pygame.sprite.Sprite):
         self.rect.x = self.BOUNDS/2 - 25
         self.rect.y = 0
 
+        self.difficulty = 6
+
     def update(self):
         self.move()
 
     def action(self, ballpos):
-        if ballpos > self.rect.x+15:
-            self.move(x=8)
-        elif ballpos < self.rect.x-15:
-            self.move(x=-8)
+        if random.randint(1, self.difficulty) < self.difficulty:
+            if ballpos > self.rect.x+15:
+                self.move(x=10)
+            elif ballpos < self.rect.x-15:
+                self.move(x=-10)
+            else:
+                return
         else:
-            return
+            self.move(random.randint(-1, 1)*10)
 
     def move(self, x=False):
         if not x:

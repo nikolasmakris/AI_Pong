@@ -21,9 +21,9 @@ MIN_REPLAY_MEMORY_SIZE = 1_000  # Minimum number of steps in a memory to start t
 MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
 MODEL_NAME = '4frames15x'
-MIN_REWARD = -300  # For model save
-MAX_REWARD = 15
-AVG_REWARD = 8
+MIN_REWARD = -1  # For model save
+MAX_REWARD = 1
+AVG_REWARD = 0
 MEMORY_FRACTION = 0.20
 
 # Environment settings
@@ -233,7 +233,9 @@ for episode in tqdm(range(1, EPISODES + 1), ascii=True, unit='episodes'):
             agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{min_reward:_>7.2f}min__{int(time.time())}.model')
 
     # Decay epsilon
-    if episode % 5 == 0:
+    if episode % 4 == 0:
         if epsilon > MIN_EPSILON:
             epsilon *= EPSILON_DECAY
             epsilon = max(MIN_EPSILON, epsilon)
+
+            

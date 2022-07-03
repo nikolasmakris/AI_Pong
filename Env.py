@@ -36,12 +36,12 @@ class PongEnv:
 
     #clock = pygame.time.Clock()
 
-    SIZE = 15
+    SIZE = 10
     ACTUAL_SIZE = BOUNDS
     RETURN_IMAGES = True
-    LOSE_PENALTY = 20
-    WIN_REWARD = 20
-    STACK_FRAMES_MEMORY_SIZE = 3
+    LOSE_PENALTY = 1
+    WIN_REWARD = -1
+    STACK_FRAMES_MEMORY_SIZE = 2
     OBSERVATION_SPACE_VALUES = (SIZE, SIZE, STACK_FRAMES_MEMORY_SIZE+1)
     ACTION_SPACE_SIZE = 3
 
@@ -69,6 +69,8 @@ class PongEnv:
             ball.update()
         if pygame.sprite.collide_mask(ball, paddleOP):
             ball.bounce()
+            while pygame.sprite.collide_mask(ball, paddleOP):
+                ball.rect.y += 1
             self.runs += 1
         if pygame.sprite.collide_mask(ball, paddleAI):
             ball.bounce()
@@ -95,7 +97,7 @@ class PongEnv:
         if reward == -self.LOSE_PENALTY or reward == self.WIN_REWARD:
             done = True
 
-        if self.runs >= 10:
+        if self.runs >= 6:
             done = True
 
         return new_observation, reward, done
@@ -130,7 +132,7 @@ class PongEnv:
             for i in range(self.STACK_FRAMES_MEMORY_SIZE):
                 self.update_stack_image_memory(np.zeros((self.SIZE, self.SIZE), dtype=np.uint8))
 
-        stack_env = np.stack((current_frame, self.replay_memory[2], self.replay_memory[1], self.replay_memory[0]), axis=2)
+        stack_env = np.stack((current_frame, self.replay_memory[1], self.replay_memory[0]), axis=2)
 
         self.update_stack_image_memory(current_frame)
 
